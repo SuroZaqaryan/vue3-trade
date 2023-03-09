@@ -1,32 +1,8 @@
-<template>
-  <div class="login">
-    <div class="login__block">
-      <form @submit.prevent="user.login(user.username, user.userPassword)">
-        <input type="text" v-model="user.username" placeholder="Имя" />
-
-        <input
-          type="password"
-          v-model="user.userPassword"
-          placeholder="Пароль"
-          autocomplete="on"
-        />
-
-        <input type="submit" value="Войти" />
-      </form>
-      <div>
-        <div id="firebaseui-auth-container"></div>
-        <div id="loader">Loading...</div>
-      </div>
-    </div>
-    <notifications />
-  </div>
-</template>
-  
-  <script>
+<script>
 import { useRouter } from "vue-router";
 
 // Pinia
-import { useAuthStore } from "@/stores/user";
+import { useAuthStore } from "@/stores/auth";
 
 // Firebase
 import firebaseConfig from "@/config/firebaseConfig";
@@ -55,7 +31,6 @@ export default {
 
       callbacks: {
         signInSuccessWithAuthResult: function (authResult) {
-          user.value = authResult.user.displayName;
           user.username = authResult.user.displayName;
           user.isAuthenticated = true;
           router.push("/");
@@ -86,6 +61,29 @@ export default {
 };
 </script>
 
-  <style lang="scss" scoped>
+<template>
+  <div class="login">
+    <div class="login__block">
+      <form @submit.prevent="user.login(user.username, user.userPassword)">
+        <input type="text" v-model="user.username" placeholder="Имя" />
+
+        <input
+          type="password"
+          v-model="user.userPassword"
+          placeholder="Пароль"
+          autocomplete="on"
+        />
+
+        <input type="submit" value="Войти" />
+      </form>
+      <div>
+        <div id="firebaseui-auth-container"></div>
+        <div id="loader">Loading...</div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
 @import "@/assets/scss/login.scss";
 </style>

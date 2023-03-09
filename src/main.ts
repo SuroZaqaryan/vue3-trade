@@ -1,4 +1,5 @@
 import { createApp, markRaw } from 'vue';
+
 import App from './App.vue';
 
 // Tan Stack

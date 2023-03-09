@@ -1,19 +1,19 @@
 import { useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed, onMounted } from "vue";
-import { bodyPartApi } from "@/api/bodyPartApi.js";
+import { ordersApi } from "@/api/ordersApi";
 
-export const useUserApi = () => {
+export const useOrdersApi = () => {
   const queryClient = useQueryClient();
 
-  const { data, isError, isLoading, isStale, isFetching } = useQuery({
-    queryKey: ["user"],
-    queryFn: bodyPartApi.getAllBodyPart,
+  const { data, isError, isLoading, isStale, isFetching } = useQuery<any>({
+    queryKey: ["orders"],
+    queryFn: ordersApi.getAllOrders,
     staleTime: 10 * 60 * 60 * 1000,
   });
 
   onMounted(async () => {
     if (isStale.value) {
-      await queryClient.invalidateQueries({ queryKey: ["user"] });
+      await queryClient.invalidateQueries({ queryKey: ["orders"] });
     }
   });
 

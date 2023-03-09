@@ -39,10 +39,10 @@ router.beforeEach((to, from, next) => {
 
 // Проверяем авторизован ли пользователь или нет
 function isUserSignedIn() {
-    const user = localStorage.getItem("auth");
+    const isAuthenticated = localStorage.getItem("auth");
 
-    if (user !== null) {
-        const isSignedIn = JSON.parse(user);
+    if (isAuthenticated !== null) {
+        const isSignedIn = JSON.parse(isAuthenticated);
         return isSignedIn.isAuthenticated;
     }
     return false;

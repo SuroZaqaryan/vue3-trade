@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from "axios"
-import { AuthState } from "@/models/user.model"
+import { AuthState, User } from "@/models/user.model"
 import { useNotification } from '@kyvg/vue3-notification'
 
 export const useAuthStore = defineStore({
@@ -8,6 +8,7 @@ export const useAuthStore = defineStore({
   state: (): AuthState => ({
     user: null,
     isAuthenticated: false,
+    isAdmin: false,
   }),
   actions: {
     async login(name: string, password: string) {
@@ -17,13 +18,15 @@ export const useAuthStore = defineStore({
       }
 
       const { data: users } = await axios.get('http://localhost:4000/users')
-      const user = users.find((u: any) => u.name === name && u.password === password)
+      const user = users.find((u: User) => u.name === name && u.password === password)
 
       // Все ок, редиректим
       if (user) {
         this.isAuthenticated = true;
+        // Проверям админ ли клиент или нет
+        user.role === 'ADMIN' ? this.isAdmin = true : null;
+        // this.isAdmin = user.id;
         window.location.href = '/';
-        console.log('yes');
       } else {
         // Такого пользователя нету
         this.validate("Неверный логин или пароль")
@@ -38,18 +41,13 @@ export const useAuthStore = defineStore({
     // setUsername(username: string) {
     //   this.username = username
     // },
-
-    logout() {
-      this.user = null
-      this.isAuthenticated = false
-    },
   },
   persist: {
     enabled: true,
     strategies: [
       {
         storage: localStorage,
-        paths: ["isAuthenticated"],
+        paths: ["isAuthenticated", "isAdmin"],
       },
     ],
   },
