@@ -19,10 +19,12 @@ pinia.use(({ store }) => {
   store.$router = router; // provide the router instance to the store
 });
 
-import Notifications from '@kyvg/vue3-notification'
-
 // Notifications
+import Notifications from '@kyvg/vue3-notification'
 import { useNotification } from '@kyvg/vue3-notification'
+
+// Modal 
+import AppModal from "@/components/AppModal.vue"
 
 // Main style
 import "@/assets/scss/main.css"
@@ -33,4 +35,5 @@ createApp(App)
   .use(VueQueryPlugin)
   .use(Notifications)
   .provide('$notify', useNotification()) // Use provide to make the useNotification function available to the entire app
+  .component("AppModal", AppModal)
   .mount('#app');

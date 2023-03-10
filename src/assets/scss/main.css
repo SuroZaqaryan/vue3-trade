@@ -3,11 +3,16 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-family: "Inter Regular";
+    background-color: #F5F5F5;
 }
 
 #wrapper {
     max-width: 797px;
     margin: auto;
+}
+
+button {
+    cursor: pointer;
 }
 
 @font-face {

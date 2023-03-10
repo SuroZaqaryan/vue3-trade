@@ -20,11 +20,11 @@
     "pinia-plugin-persist": "^1.0.0",
     "sass": "^1.58.3",
     "sass-loader": "^13.2.0",
-    "uuid": "^9.0.0",
     "vue": "^3.2.13",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
+    "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "@vue/cli-plugin-babel": "~5.0.0",

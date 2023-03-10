@@ -7,11 +7,13 @@ export const useAuthStore = defineStore({
   id: 'auth',
   state: (): AuthState => ({
     user: null,
+    username: null,
     isAuthenticated: false,
     isAdmin: false,
   }),
   actions: {
     async login(name: string, password: string) {
+
       if (password.length < 3) {
         this.validate("Пароль должен быть не менее 8 символов")
         return
@@ -25,7 +27,7 @@ export const useAuthStore = defineStore({
         this.isAuthenticated = true;
         // Проверям админ ли клиент или нет
         user.role === 'ADMIN' ? this.isAdmin = true : null;
-        // this.isAdmin = user.id;
+        this.username = user.name;
         window.location.href = '/';
       } else {
         // Такого пользователя нету
@@ -37,17 +39,13 @@ export const useAuthStore = defineStore({
       const { notify } = useNotification()
       notify({ type: 'error', text: text })
     },
-
-    // setUsername(username: string) {
-    //   this.username = username
-    // },
   },
   persist: {
     enabled: true,
     strategies: [
       {
         storage: localStorage,
-        paths: ["isAuthenticated", "isAdmin"],
+        paths: ["isAuthenticated", "isAdmin", "username"],
       },
     ],
   },

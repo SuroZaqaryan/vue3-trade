@@ -1,49 +1,39 @@
 <script setup lang="ts">
-import { useRouter } from "vue-router";
-import { useMutation, useQueryClient } from "@tanstack/vue-query";
-import { getAuth, signOut } from "firebase/auth";
 import { useOrdersApi } from "@/api/hooks/useOrdersApi";
-import { ordersApi } from "@/api/ordersApi";
+
+import { useOrderStore } from "@/stores/order";
+
+// Auth
 import { useAuthStore } from "@/stores/auth";
-import { useNotification } from "@kyvg/vue3-notification";
-import AppHeader from "@/components/AppHeader.vue";
 
-const { data, pending } = useOrdersApi();
-const router = useRouter();
-const auth = getAuth(); // firebase
+// Modal
+import { useModalStore } from "@/stores/modal";
+const modal = useModalStore();
+
+// Getting orders
+const { data, pending } = useOrdersApi(); // orders
 const user = useAuthStore(); // auth store
-const { notify } = useNotification(); // notification popup
 
-const { mutateAsync: deleteOrder } = useMutation(ordersApi.deleteOrder);
-const queryClient = useQueryClient();
-
-const handleSignOut = () => {
-  signOut(auth)
-    .then(() => {
-      // Sign-out successful.
-      localStorage.removeItem("auth");
-      router.push("/login");
-    })
-    .catch((error) => {
-      // An error happened.
-      console.log(error);
-    });
-};
-
-const handleDeleteOrder = async (orderId: number) => {
-  await deleteOrder({ orderId });
-  await queryClient.refetchQueries();
-  notify({ type: "success", text: "Продукт успешно удален" });
-};
+const order = useOrderStore();
 </script>
 
 <template>
-  <app-header />
-  <div v-if="pending">
-    <h1>Загрузка...</h1>
-  </div>
+  <app-modal v-show="modal.isShow">
+    <div class="modal">
+      <div class="modal__title">
+        <p>Вы действительно хотите удалить заказ?</p>
+      </div>
+
+      <div class="modal__details">
+        <button @click="order.handleDeleteOrder(modal.orderId)">Ok</button>
+        <button @click="modal.hideModal">Отмента</button>
+      </div>
+    </div>
+  </app-modal>
+  <div v-if="pending"><h1>Загрузка...</h1></div>
+
   <div v-else>
-    <main>
+    <div class="home">
       <table class="table">
         <thead>
           <tr>
@@ -61,8 +51,17 @@ const handleDeleteOrder = async (orderId: number) => {
             <td>{{ order.name }}</td>
             <td>{{ order.address }}</td>
             <td>{{ order.date }}</td>
-            <td :class="{ completed: order.status === 'Выполнен' }">
+            <td
+              class="table__status"
+              :class="{ completed: order.status === 'Выполнен' }"
+            >
               {{ order.status }}
+              <button
+                @click="order.changeOrderStatus(order.id, 'Выполнен')"
+                v-if="order.status !== 'Выполнен'"
+              >
+                Изменить Статус
+              </button>
             </td>
             <td class="table__comments">
               {{ order.comment }}
@@ -77,7 +76,10 @@ const handleDeleteOrder = async (orderId: number) => {
 
                 <button
                   v-if="order.status === 'Выполнен' && user.isAdmin"
-                  @click="handleDeleteOrder(order.id)"
+                  @click="
+                    modal.showModal();
+                    modal.orderId = order.id;
+                  "
                   title="Удалить заказ"
                 >
                   <img
@@ -90,14 +92,7 @@ const handleDeleteOrder = async (orderId: number) => {
           </tr>
         </tbody>
       </table>
-    </main>
-
-    <button
-      @click="handleSignOut"
-      class="w-full bg-transparent text-white text-sm py-2 px-4 border border-white rounded"
-    >
-      Выйти из аккаунта
-    </button>
+    </div>
   </div>
 </template>
 

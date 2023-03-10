@@ -7,6 +7,7 @@ export interface User {
 
 export interface AuthState {
     user: User | null
+    username: null;
     isAuthenticated: boolean
     isAdmin: boolean
 }
