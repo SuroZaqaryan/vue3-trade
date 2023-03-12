@@ -2,7 +2,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 52px;
   padding: 0 22px;
   background-color: #165996;
 
@@ -10,6 +9,7 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 
     .nav__list {
       display: flex;
@@ -27,12 +27,12 @@
         gap: 28px;
         a {
           color: #000000;
+          white-space: nowrap;
         }
       }
 
       .nav__item {
         list-style: none;
-        line-height: 0;
         a {
           text-decoration: none;
           font-size: 12px;

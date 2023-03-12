@@ -23,7 +23,7 @@ const changeStatus = (orderId: number) => {
     <div class="home">
       <sorting-filters />
 
-      <div>
+      <div style="overflow-x: auto">
         <table class="table">
           <thead>
             <tr>
