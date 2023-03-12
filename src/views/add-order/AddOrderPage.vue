@@ -25,7 +25,7 @@ const userInfo = reactive<UserInfoOrder>({
   date: date.value,
 });
 
-function sendOrder() {
+function sendOrder(): void {
   userInfo.id = uuidv4();
   order.addNewOrder(userInfo);
 }

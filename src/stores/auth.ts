@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import axios from "axios"
+import { api } from "@/libs/axios"
 import { AuthState, User } from "@/models/user.model"
 import { useNotification } from '@kyvg/vue3-notification'
 
@@ -18,13 +18,12 @@ export const useAuthStore = defineStore({
   actions: {
     async login(name: string, password: string) {
       if (password.length < 8) {
-        this.validate("Пароль должен быть более 8 символов.")
-        return
+        return this.validate("Пароль должен быть более 8 символов")
       }
 
-      const { data: users } = await axios.get('http://localhost:4000/users')
+      const { data: users } = await api.get('users')
       const findUserDb = users.find((u: User) => u.name === name && u.password === password)
-
+      
       if (findUserDb) {
         this.isAuthenticated = true;
         this.user = Object.assign({}, findUserDb, { password: "" });

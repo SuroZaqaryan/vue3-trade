@@ -12,6 +12,7 @@ const order = useOrderStore(); // orders (товары)
         v-model="order.sortData"
         value="sort-address"
       />
+      
       <label for="address"> Сортировать по адресу </label>
 
       <input

@@ -41,7 +41,7 @@ export default {
           router.push("/");
           return false; // so it doesn't refresh the page
         },
-        uiShown: function () {
+        uiShown: function (): void {
           // Hide the loader.
           if (loader.value !== null) loader.value.style.display = "none";
         },
@@ -57,10 +57,10 @@ export default {
     }
 
     return {
-      user,
-      userName,
       userPassword,
+      userName,
       loader,
+      user,
     };
   },
 };
@@ -68,6 +68,16 @@ export default {
 
 <template>
   <div class="login">
+    <div class="login__info">
+      <code>
+        "password": "123456789", "name": "Петр Петров", "role":
+        <span>"USER"</span>
+      </code>
+      <code>
+        "password": "123456789", "name": "Иван Иванов", "role":
+        <span>"ADMIN"</span>
+      </code>
+    </div>
     <div class="login__block">
       <form @submit.prevent="user.login(userName, userPassword)">
         <input type="text" v-model="userName" placeholder="Имя" />
@@ -90,5 +100,5 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@import "@/views/login/Login.scss";
+@import "@/views/login/LoginPage.scss";
 </style>

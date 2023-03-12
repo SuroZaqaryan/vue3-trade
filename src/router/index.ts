@@ -30,19 +30,13 @@ const routes = [
     },
 ];
 
-const router = createRouter({
-    history: createWebHistory(),
-    routes,
-});
+const router = createRouter({history: createWebHistory(), routes});
 
 router.beforeEach((to, from, next) => {
     const isAuthRoute = to.matched.some(record => record.meta.isAuth);
 
     // Если не авторизован редиректим в login
-    if (isAuthRoute && !isUserSignedIn()) {
-        return next('/login');
-    }
-
+    if (isAuthRoute && !isUserSignedIn()) return next('/login');
     return next();
 });
 

@@ -1,9 +1,29 @@
 .login {
+  position: relative;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #f1f1f1;
+
+  &__info {
+    position: absolute;
+    top: 1rem;
+
+    code {
+      display: block;
+      margin-bottom: 10px;
+      font-family: system-ui;
+      font-size: 14px;
+      letter-spacing: 1px;
+
+      span {
+        background: #333333;
+        color: #fff;
+        padding: 2px 6px;
+      }
+    }
+  }
 
   &__block {
     width: 344px;

@@ -1,29 +1,11 @@
 # vue3-trade
 
-## Project setup
+## Commands
 
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-
-```
-npm run build
-```
-
-### Lints and fixes files
-
-```
-npm run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+| Command          | Action                                   |
+| :--------------- | :--------------------------------------- |
+| `npm install`    | Project setup, Install dependencies      |
+| `npm run server` | Start local server                       |
+| `npm run serve`  | Compiles and hot-reloads for development |
+| `npm run build`  | Compiles and minifies for production     |
+| `npm run lint`   | Lints and fixes files                    |

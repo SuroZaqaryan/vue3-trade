@@ -20,10 +20,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-main {
-  max-width: 800px;
-  margin: auto;
-}
-</style>

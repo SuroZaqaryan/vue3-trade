@@ -1,12 +1,11 @@
 import { useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed, onMounted } from "vue";
 import { ordersApi } from "@/api/ordersApi";
-import { UserInfoOrder } from "@/models/user.model"
 
 export const useOrdersApi = () => {
   const queryClient = useQueryClient();
 
-  const { data, isError, isLoading, isStale, isFetching } = useQuery<UserInfoOrder[]>({
+  const { data, isError, isLoading, isStale, isFetching } = useQuery({
     queryKey: ["orders"],
     queryFn: ordersApi.getAllOrders,
     staleTime: 10 * 60 * 60 * 1000,

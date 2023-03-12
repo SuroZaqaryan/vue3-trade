@@ -11,7 +11,6 @@ import { UserInfoOrder } from "@/models/user.model"
 export const useOrderStore = defineStore('useOrderStore', () => {
     const { notify } = useNotification();
     const queryClient = useQueryClient();
-    const modal = useModalStore();
 
     const { mutateAsync: deleteOrder } = useMutation(ordersApi.deleteOrder); // delete order
     const { mutateAsync: changeOrderStatusApi } = useMutation(ordersApi.changeOrderStatusApi); // change order status
@@ -26,37 +25,33 @@ export const useOrderStore = defineStore('useOrderStore', () => {
     const handleDeleteOrder = async (orderId: number): Promise<void> => {
         await deleteOrder({ orderId });
         await queryClient.refetchQueries();
-        await notify({ type: "success", text: "Продукт успешно удален" });
-        modal.hideModal();
+        notify({ type: "success", text: "Продукт успешно удален" });
+        useModalStore().hideModal();
     };
 
     // Изменение статуса
     const changeOrderStatus = async (orderId: number, status: string): Promise<void> => {
         await changeOrderStatusApi({ orderId, status });
         await queryClient.refetchQueries();
-        await notify({ type: "success", text: "Статус успешно изменен" });
+        notify({ type: "success", text: "Статус успешно изменен" });
     }
 
     // Добавление нового заказа
     const addNewOrder = async (userInfo: UserInfoOrder): Promise<void> => {
         await addNewOrderApi({ userInfo });
         await queryClient.refetchQueries();
-        await notify({ type: "success", text: "Товар успешно добавлен" });
+        notify({ type: "success", text: "Товар успешно добавлен" });
     }
 
     type OrderType = { date: string }
     type DateType = { address: string }
 
     const orders = computed(() => {
-        if (!data.value) {
-            return data.value;
-        }
-
-        const sortedData = [...data.value];
+        if (!data.value) return data.value;
 
         // Сортировка адреса
         if (sortData.value === 'sort-address') {
-            return sortedData.sort((a: DateType, b: DateType) => {
+            return [...data.value].sort((a: DateType, b: DateType) => {
                 if (a.address < b.address) return -1;
                 if (a.address > b.address) return 1;
                 return 0;
@@ -71,7 +66,7 @@ export const useOrderStore = defineStore('useOrderStore', () => {
             })).sort((a: OrderType, b: OrderType) => moment(a.date, "D MMMM YYYY [г.]", "ru").diff(moment(b.date, "D MMMM YYYY [г.]", "ru")));
         }
 
-        return sortedData;
+        return [...data.value];
     });
 
     // Сброс фильтров
