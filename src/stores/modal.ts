@@ -5,7 +5,7 @@ export const useModalStore = defineStore({
     id: 'modal',
     state: (): Modal => ({
       isShow: false,
-      orderId: Number
+      orderId: null
     }),
     actions: {
         showModal() {

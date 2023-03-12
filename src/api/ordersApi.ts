@@ -16,18 +16,14 @@ export const ordersApi = {
     return data;
   },
 
-  changeStatusOrder: async ({ orderId, status }: { orderId: number, status: string }): Promise<Order> => {
-    const { data } = await api.patch<Order>(`orders/${orderId}`, {
-      orderId,
-      status,
-    });
+  changeOrderStatusApi: async ({ orderId, status }: { orderId: number, status: string }): Promise<Order> => {
+    const { data } = await api.patch<Order>(`orders/${orderId}`, { status });
     return data;
   },
 
-  addNewOrder: async ({ orderId, status }: { orderId: number, status: string }): Promise<Order> => {
-    const { data } = await api.patch<Order>(`orders/${orderId}`, {
-      orderId,
-      status,
+  addNewOrderApi: async ({ userInfo }: { userInfo: object }): Promise<Order> => {
+    const { data } = await api.post<Order>('orders', {
+      ...userInfo
     });
     return data;
   },

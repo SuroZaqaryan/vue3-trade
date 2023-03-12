@@ -6,31 +6,30 @@ import { useNotification } from '@kyvg/vue3-notification'
 export const useAuthStore = defineStore({
   id: 'auth',
   state: (): AuthState => ({
-    user: null,
-    username: null,
+    user: {
+      id: '',
+      user: '',
+      password: '',
+      name: '',
+      role: ''
+    },
     isAuthenticated: false,
-    isAdmin: false,
   }),
   actions: {
     async login(name: string, password: string) {
-
-      if (password.length < 3) {
-        this.validate("Пароль должен быть не менее 8 символов")
+      if (password.length < 8) {
+        this.validate("Пароль должен быть более 8 символов.")
         return
       }
 
       const { data: users } = await axios.get('http://localhost:4000/users')
-      const user = users.find((u: User) => u.name === name && u.password === password)
+      const findUserDb = users.find((u: User) => u.name === name && u.password === password)
 
-      // Все ок, редиректим
-      if (user) {
+      if (findUserDb) {
         this.isAuthenticated = true;
-        // Проверям админ ли клиент или нет
-        user.role === 'ADMIN' ? this.isAdmin = true : null;
-        this.username = user.name;
-        window.location.href = '/';
+        this.user = Object.assign({}, findUserDb, { password: "" });
+        window.location.href = '/'; // Все ок, редиректим
       } else {
-        // Такого пользователя нету
         this.validate("Неверный логин или пароль")
       }
     },
@@ -45,7 +44,7 @@ export const useAuthStore = defineStore({
     strategies: [
       {
         storage: localStorage,
-        paths: ["isAuthenticated", "isAdmin", "username"],
+        paths: ["isAuthenticated", "user"],
       },
     ],
   },

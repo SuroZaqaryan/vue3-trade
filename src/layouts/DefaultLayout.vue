@@ -1,5 +1,5 @@
 <template>
-  <AppHeader v-if="user.isAdmin" />
+  <AppHeader v-if="user.isAuthenticated" />
   <notifications />
   <main>
     <slot></slot>
@@ -8,7 +8,7 @@
 
 <script setup>
 import { useAuthStore } from "@/stores/auth";
-import AppHeader from "@/components/AppHeader.vue";
+import AppHeader from "@/components/common/header/AppHeader.vue";
 
 const user = useAuthStore(); // auth store
 </script>
@@ -22,8 +22,8 @@ export default {
 </script>
 
 <style scoped>
-  main {
-    padding-right: 4rem;
-    overflow-x: auto;
-  }
+main {
+  max-width: 800px;
+  margin: auto;
+}
 </style>

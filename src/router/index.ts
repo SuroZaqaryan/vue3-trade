@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/home/HomePage.vue';
 import Login from '@/views/login/LoginPage.vue';
-import AllOrders from "@/views/all-orders/AllOrdersPage.vue";
 import AddOrder from "@/views/add-order/AddOrderPage.vue";
 
 const routes = [
@@ -11,14 +10,6 @@ const routes = [
         component: Login,
         meta: {
             isAuth: false
-        }
-    },
-    {
-        path: '/all-orders',
-        name: 'AllOrders',
-        component: AllOrders,
-        meta: {
-            true: true
         }
     },
     {

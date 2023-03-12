@@ -1,11 +1,10 @@
-<script>
+<script lang="ts">
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-// Pinia
-import { useAuthStore } from "@/stores/auth";
-
-// Firebase
-import firebaseConfig from "@/config/firebaseConfig";
+import { useAuthStore } from "@/stores/auth"; // Auth
+import firebaseConfig from "@/config/firebaseConfig"; // Firebase
+import { UserCredential } from "firebase/auth";
 
 // v9 compat packages are API compatible with v8 code
 import firebase from "firebase/compat/app";
@@ -15,10 +14,14 @@ import "firebaseui/dist/firebaseui.css";
 
 export default {
   setup() {
-    // Login with social network
     const router = useRouter();
     const user = useAuthStore();
 
+    const userName = ref<string>("");
+    const userPassword = ref<string>("");
+    const loader = ref<HTMLElement | null>(null);
+
+    // Login with social network
     const uiConfig = {
       signInFlow: "popup",
       signinSuccessUrl: "http://localhost:8080/",
@@ -30,18 +33,17 @@ export default {
       ],
 
       callbacks: {
-        signInSuccessWithAuthResult: function (authResult) {
-          user.username = authResult.user.displayName;
+        signInSuccessWithAuthResult: function (authResult: UserCredential) {
+          if (authResult.user.displayName !== null) {
+            user.user.name = authResult.user.displayName;
+          }
           user.isAuthenticated = true;
           router.push("/");
-
-          // so it doesn't refresh the page
-          return false;
+          return false; // so it doesn't refresh the page
         },
         uiShown: function () {
-          // The widget is rendered.
           // Hide the loader.
-          document.getElementById("loader").style.display = "none";
+          if (loader.value !== null) loader.value.style.display = "none";
         },
       },
     };
@@ -56,6 +58,9 @@ export default {
 
     return {
       user,
+      userName,
+      userPassword,
+      loader,
     };
   },
 };
@@ -64,12 +69,12 @@ export default {
 <template>
   <div class="login">
     <div class="login__block">
-      <form @submit.prevent="user.login(user.username, user.userPassword)">
-        <input type="text" v-model="user.username" placeholder="Имя" />
+      <form @submit.prevent="user.login(userName, userPassword)">
+        <input type="text" v-model="userName" placeholder="Имя" />
 
         <input
           type="password"
-          v-model="user.userPassword"
+          v-model="userPassword"
           placeholder="Пароль"
           autocomplete="on"
         />
@@ -78,12 +83,12 @@ export default {
       </form>
       <div>
         <div id="firebaseui-auth-container"></div>
-        <div id="loader">Loading...</div>
+        <div ref="loader" id="loader">Loading...</div>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/login.scss";
+@import "@/views/login/Login.scss";
 </style>

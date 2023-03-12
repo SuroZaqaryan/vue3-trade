@@ -17,6 +17,7 @@
 
       input {
         display: block;
+        width: 100%;
         width: -webkit-fill-available;
         height: 34px;
         padding: 0 8px;
@@ -25,7 +26,7 @@
         outline-color: #9e9e9e;
       }
 
-      input[type="submit"] {
+      input[type='submit'] {
         max-width: 104px;
         margin: auto;
         margin-top: 2rem;
@@ -36,7 +37,7 @@
         }
       }
 
-      input[type="text"] {
+      input[type='text'] {
         margin-bottom: 32px;
       }
 

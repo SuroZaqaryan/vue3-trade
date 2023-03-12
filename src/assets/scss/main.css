@@ -6,11 +6,6 @@ body {
     background-color: #F5F5F5;
 }
 
-#wrapper {
-    max-width: 797px;
-    margin: auto;
-}
-
 button {
     cursor: pointer;
 }

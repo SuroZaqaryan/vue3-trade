@@ -1,39 +1,28 @@
 <script setup lang="ts">
-import { useOrdersApi } from "@/api/hooks/useOrdersApi";
+import { useOrderStore } from "@/stores/order"; // Orders
+import { useModalStore } from "@/stores/modal"; // Modal
+import { useAuthStore } from "@/stores/auth"; // Auth
 
-import { useOrderStore } from "@/stores/order";
+import SortingFilters from "@/components/sorting-filters/SortingFilters.vue";
+import ModalOrder from "@/components/modal-order/ModalOrder.vue";
 
-// Auth
-import { useAuthStore } from "@/stores/auth";
+const modal = useModalStore(); // modal window
+const order = useOrderStore(); // orders (товары)
+const auth = useAuthStore(); // store authorization
 
-// Modal
-import { useModalStore } from "@/stores/modal";
-const modal = useModalStore();
+const isAdmin = auth.user.role === "ADMIN";
 
-// Getting orders
-const { data, pending } = useOrdersApi(); // orders
-const user = useAuthStore(); // auth store
-
-const order = useOrderStore();
+const changeStatus = (orderId: number) => {
+  order.changeOrderStatus(orderId, "Выполнен");
+};
 </script>
 
 <template>
-  <app-modal v-show="modal.isShow">
-    <div class="modal">
-      <div class="modal__title">
-        <p>Вы действительно хотите удалить заказ?</p>
-      </div>
-
-      <div class="modal__details">
-        <button @click="order.handleDeleteOrder(modal.orderId)">Ok</button>
-        <button @click="modal.hideModal">Отмента</button>
-      </div>
-    </div>
-  </app-modal>
-  <div v-if="pending"><h1>Загрузка...</h1></div>
-
-  <div v-else>
+  <modal-order />
+  <div>
     <div class="home">
+      <sorting-filters />
+
       <table class="table">
         <thead>
           <tr>
@@ -45,29 +34,28 @@ const order = useOrderStore();
             <th>Комментарий</th>
           </tr>
         </thead>
+
         <tbody>
-          <tr v-for="(order, index) in data" :key="order.id">
-            <td>{{ index + 1 }}</td>
-            <td>{{ order.name }}</td>
-            <td>{{ order.address }}</td>
-            <td>{{ order.date }}</td>
-            <td
-              class="table__status"
-              :class="{ completed: order.status === 'Выполнен' }"
-            >
-              {{ order.status }}
-              <button
-                @click="order.changeOrderStatus(order.id, 'Выполнен')"
-                v-if="order.status !== 'Выполнен'"
-              >
-                Изменить Статус
-              </button>
-            </td>
+          <tr
+            v-for="(item, index) in order.orders"
+            :key="item.id"
+            :class="{ completed: item.status === 'Выполнен' }"
+          >
+            <td class="table__index">{{ index + 1 }}</td>
+            <td class="table__name">{{ item.name }}</td>
+            <td class="table__address">{{ item.address }}</td>
+            <td class="table__date">{{ item.date }}</td>
+            <td class="table__status">{{ item.status }}</td>
+
             <td class="table__comments">
-              {{ order.comment }}
+              {{ item.comment }}
 
               <div class="table__buttons">
-                <button title="Выполнен">
+                <button
+                  v-if="item.status !== 'Выполнен' && isAdmin"
+                  @click="changeStatus(item.id)"
+                  title="Выполнен"
+                >
                   <img
                     src="@/assets/static/icons/completed-icon.svg"
                     alt="completed"
@@ -75,10 +63,10 @@ const order = useOrderStore();
                 </button>
 
                 <button
-                  v-if="order.status === 'Выполнен' && user.isAdmin"
+                  v-if="item.status === 'Выполнен' && isAdmin"
                   @click="
                     modal.showModal();
-                    modal.orderId = order.id;
+                    modal.orderId = item.id;
                   "
                   title="Удалить заказ"
                 >
@@ -97,5 +85,5 @@ const order = useOrderStore();
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/home.scss";
+@import "@/views/home/HomePage.scss";
 </style>

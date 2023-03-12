@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { useRouter, RouterLink } from "vue-router";
 import { getAuth, signOut } from "firebase/auth";
+import { useAuthStore } from "@/stores/auth";
 
-const auth = getAuth(); // firebase
+const auth = useAuthStore(); // auth store
+const firebaseAuth = getAuth(); // firebase
 const router = useRouter();
 
 const handleSignOut = () => {
-  signOut(auth)
+  signOut(firebaseAuth)
     .then(() => {
       // Sign-out successful.
       localStorage.removeItem("auth");
@@ -24,7 +26,7 @@ const handleSignOut = () => {
     <nav class="header__nav">
       <ul class="nav__list nav__list-orders">
         <li class="nav__item">
-          <router-link to="/all-orders">Все заказы</router-link>
+          <router-link to="/">Все заказы</router-link>
         </li>
         <li class="nav__item">
           <router-link to="/add-order">Добавить заказ</router-link>
@@ -32,7 +34,9 @@ const handleSignOut = () => {
       </ul>
 
       <ul class="nav__list nav__list-profile">
-        <li class="nav__item"><a href="#">ИмяФамилия</a></li>
+        <li class="nav__item">
+          <a href="#">{{ auth.user.name }}</a>
+        </li>
         <li class="nav__item"><button @click="handleSignOut">Выйти</button></li>
       </ul>
     </nav>
@@ -40,5 +44,5 @@ const handleSignOut = () => {
 </template>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/header.scss";
+@import "@/components/common/header/header.scss";
 </style>
