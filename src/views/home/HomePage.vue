@@ -19,69 +19,68 @@ const changeStatus = (orderId: number) => {
 
 <template>
   <modal-order />
-  <div>
-    <div class="home">
-      <sorting-filters />
 
-      <div style="overflow-x: auto">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>№</th>
-              <th>Имя клиента</th>
-              <th>Адрес</th>
-              <th>Дата заказа</th>
-              <th>Статус</th>
-              <th>Комментарий</th>
-            </tr>
-          </thead>
+  <div class="home">
+    <sorting-filters />
 
-          <tbody>
-            <tr
-              v-for="(item, index) in order.orders"
-              :key="item.id"
-              :class="{ completed: item.status === 'Выполнен' }"
-            >
-              <td class="table__index">{{ index + 1 }}</td>
-              <td class="table__name">{{ item.name }}</td>
-              <td class="table__address">{{ item.address }}</td>
-              <td class="table__date">{{ item.date }}</td>
-              <td class="table__status">{{ item.status }}</td>
+    <div style="overflow-x: auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>№</th>
+            <th>Имя клиента</th>
+            <th>Адрес</th>
+            <th>Дата заказа</th>
+            <th>Статус</th>
+            <th>Комментарий</th>
+          </tr>
+        </thead>
 
-              <td class="table__comments">
-                {{ item.comment }}
+        <tbody>
+          <tr
+            v-for="(item, index) in order.orders"
+            :key="item.id"
+            :class="{ completed: item.status === 'Выполнен' }"
+          >
+            <td class="table__index">{{ index + 1 }}</td>
+            <td class="table__name">{{ item.name }}</td>
+            <td class="table__address">{{ item.address }}</td>
+            <td class="table__date">{{ item.date }}</td>
+            <td class="table__status">{{ item.status }}</td>
 
-                <div class="table__buttons">
-                  <button
-                    v-if="item.status !== 'Выполнен' && isAdmin"
-                    @click="changeStatus(item.id)"
-                    title="Выполнен"
-                  >
-                    <img
-                      src="@/assets/static/icons/completed-icon.svg"
-                      alt="completed"
-                    />
-                  </button>
+            <td class="table__comments">
+              {{ item.comment }}
 
-                  <button
-                    v-if="item.status === 'Выполнен' && isAdmin"
-                    @click="
-                      modal.showModal();
-                      modal.orderId = item.id;
-                    "
-                    title="Удалить заказ"
-                  >
-                    <img
-                      src="@/assets/static/icons/delete-icon.svg"
-                      alt="delete"
-                    />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+              <div class="table__buttons">
+                <button
+                  v-if="item.status !== 'Выполнен' && isAdmin"
+                  @click="changeStatus(item.id)"
+                  title="Выполнен"
+                >
+                  <img
+                    src="@/assets/static/icons/completed-icon.svg"
+                    alt="completed"
+                  />
+                </button>
+
+                <button
+                  v-if="item.status === 'Выполнен' && isAdmin"
+                  @click="
+                    modal.showModal();
+                    modal.orderId = item.id;
+                  "
+                  title="Удалить заказ"
+                >
+                  <img
+                    src="@/assets/static/icons/delete-icon.svg"
+                    alt="delete"
+                  />
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
